@@ -12,8 +12,8 @@
 # 1. 필요한 라이브러리 임포트
 import numpy as np
 from sklearn.linear_model import LinearRegression  # 선형 회귀 모델 (추정기)
-from sklearn.preprocessing import StandardScaler  # 데이터 스케일링 (변환기)
 from sklearn.model_selection import train_test_split  # 데이터 분할
+from sklearn.preprocessing import StandardScaler  # 데이터 스케일링 (변환기)
 
 # 2. 예제 데이터 생성
 # X: 독립 변수(집 크기), y: 종속 변수(집 가격)
@@ -26,9 +26,7 @@ y = np.array([12, 18, 22, 28, 33, 38, 45, 52, 58])
 # 3. 데이터 분할
 # 학습(train) 세트와 테스트(test) 세트로 데이터를 나눕니다.
 # 학습 세트는 모델 훈련에 사용되고, 테스트 세트는 모델 성능 평가에 사용됩니다.
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3, random_state=42
-)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # ---
 # 4. 추정기 API 사용 예시 (변환기 - StandardScaler)
