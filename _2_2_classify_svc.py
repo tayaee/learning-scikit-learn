@@ -1,0 +1,171 @@
+"""
+지도 학습 (Supervised Learning):
+    분류 (Classification): 데이터를 미리 정의된 클래스 또는 범주로 분류하는 데 사용됩니다.
+        예: sklearn.svm.SVC, sklearn.ensemble.RandomForestClassifier
+
+SVC (Support Vector Classifier):
+    SVC (Support Vector Classifier)는 서포트 벡터 머신(Support Vector Machine) 알고리즘을 사용한 분류 모델입니다.
+    이 모델은 데이터 포인트들을 가장 잘 나누는 최적의 결정 경계(Decision Boundary)를 찾는 데 초점을 둡니다.
+    특히, 비선형적인 데이터도 '커널 트릭(Kernel Trick)'을 통해 고차원으로 변환하여 효과적으로 분류할 수 있는 강력한 성능을 보여줍니다.
+
+핵심 개념:
+    초 평면 (Hyperplane)
+    마진 (Margin)
+    서포트 벡터 (Support Vectors)
+    커널 (Kernel)
+"""
+
+# 1. 필요한 라이브러리 임포트
+from sklearn.datasets import make_classification  # 분류용 가상 데이터 생성
+from sklearn.metrics import accuracy_score, classification_report  # 모델 평가 지표
+from sklearn.model_selection import train_test_split  # 데이터 분할
+from sklearn.svm import SVC  # Support Vector Classifier (SVC) - 지도 학습 분류 모델
+
+# 2. 예제 데이터 생성
+# make_classification 함수로 가상의 분류 데이터를 만듭니다.
+# 예를 들어, '암 진단' 시나리오를 모사해 보겠습니다.
+# - n_samples=100: 100명의 환자 데이터
+# - n_features=2: 2가지 검사 수치 (예: 특징1='종양 크기', 특징2='세포 모양 불규칙성')
+# - n_classes=2: 2가지 진단 결과 (예: 클래스0='양성', 클래스1='악성')
+# - n_redundant=0: 불필요한(다른 특징의 조합으로 만들어지는) 특징은 없음
+# - random_state=42: 재현 가능한 결과를 위한 시드값
+X, y = make_classification(n_samples=100, n_features=2, n_classes=2, n_redundant=0, random_state=42)
+
+# 3. 데이터 분할
+# 데이터를 학습(train) 세트와 테스트(test) 세트로 나눕니다.
+# 학습 세트는 모델 훈련에 사용되고, 테스트 세트는 모델 성능 평가에 사용됩니다.
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# 4. 추정기(Estimator) 인스턴스 생성
+# SVC는 'Support Vector Classifier'의 약자로, 분류 문제에 사용되는 추정기입니다.
+# C: 규제 매개변수. C값이 작을수록 규제가 강해지고, 모델이 간단해집니다.
+# kernel: 데이터를 분류하는 데 사용되는 함수입니다. 'linear', 'rbf' 등이 있습니다.
+# 'rbf'가 가장 일반적으로 사용되며, 비선형 데이터에 효과적입니다.
+model = SVC(kernel="linear", C=1.0, random_state=42)
+
+# 5. 모델 학습 (fit)
+# model.fit(X, y) 메서드를 사용하여 학습 데이터에 모델을 맞춥니다.
+# 모델은 이 과정을 통해 데이터의 패턴을 학습하고, 최적의 결정 경계를 찾습니다.
+model.fit(X_train, y_train)
+
+# 6. 예측 (predict)
+# model.predict(X) 메서드를 사용하여 학습된 모델로 테스트 데이터에 대한 예측을 수행합니다.
+# 예측 결과는 0 또는 1과 같은 클래스 레이블이 됩니다.
+y_pred = model.predict(X_test)
+
+# 7. 모델 평가
+# 실제 값(y_test)과 예측 값(y_pred)을 비교하여 모델의 성능을 평가합니다.
+
+# 정확도 (Accuracy): 전체 예측 중 올바르게 예측한 비율
+accuracy = accuracy_score(y_test, y_pred)
+print(f"모델의 정확도: {accuracy:.2f}")
+
+# Classification Report: 정밀도(Precision), 재현율(Recall), F1-점수 등 더 자세한 평가 지표를 제공합니다.
+# 정밀도: '양성'으로 예측한 것 중에서 실제 '양성'인 비율
+# 재현율: 실제 '양성' 중에서 모델이 '양성'으로 올바르게 예측한 비율
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+"""
+모델의 정확도: 1.00
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        16
+           1       1.00      1.00      1.00        14
+
+    accuracy                           1.00        30
+   macro avg       1.00      1.00      1.00        30
+weighted avg       1.00      1.00      1.00        30
+"""
+
+"""
+복습
+
+Q1. sklearn.svm.SVC 모델은 어떤 유형의 머신러닝 문제에 사용되나요?
+
+    - SVC는 **지도 학습(Supervised Learning)**의 한 종류인 분류(Classification) 문제에 사용됩니다. 
+      주어진 데이터를 미리 정의된 여러 클래스 중 하나로 분류하는 데 활용됩니다.
+
+Q2. 코드에서 fit() 메서드는 어떤 역할을 하며, 어떤 데이터를 인수로 받나요?
+
+    - fit() 메서드는 모델을 학습시키는 역할을 합니다. 
+      이 메서드는 모델이 데이터의 패턴을 파악하고 학습할 수 있도록 
+      **특징 데이터(X_train)**와 해당 특징에 대한 **정답 레이블(y_train)**을 인수로 받습니다.
+
+Q3. predict() 메서드는 어떤 목적으로 사용되며, 그 결과물은 무엇인가요?
+
+    - predict() 메서드는 학습이 완료된 모델을 사용하여 새로운, 
+      즉 학습에 사용되지 않은 데이터에 대한 예측을 수행하는 데 사용됩니다. 
+      그 결과물은 입력 데이터에 대해 모델이 예측한 클래스 레이블의 배열입니다.
+
+Q4. train_test_split을 사용하는 이유는 무엇인가요? 이 과정이 없으면 어떤 문제가 발생할 수 있나요?
+
+    - train_test_split은 모델의 **과적합(overfitting)**을 방지하고, 
+      모델의 일반화 성능을 객관적으로 평가하기 위해 사용됩니다.
+
+    - 이 과정을 사용하지 않고 전체 데이터로 모델을 학습시키고 평가하면, 
+      모델은 학습 데이터에만 지나치게 맞춰져 
+      실제 새로운 데이터에 대해서는 성능이 떨어지는 과적합이 발생할 수 있습니다. 
+      train_test_split을 통해 모델이 한 번도 보지 못한 테스트 데이터를 사용하여 모델의 진짜 성능을 측정할 수 있습니다.
+
+Q5. accuracy_score와 classification_report는 각각 모델의 어떤 측면을 평가하는 데 사용되나요?
+
+    - accuracy_score는 모델이 전체 예측 중에서 얼마나 많은 예측을 정확하게 맞췄는지 
+      비율로 나타내는 정확도를 평가하는 데 사용됩니다.
+
+    - classification_report는 단순히 정확도뿐만 아니라, 
+      정밀도(Precision), 재현율(Recall), F1-점수 등 클래스별로 더 세분화된 성능 지표를 제공하여 
+      모델의 강점과 약점을 파악하는 데 도움을 줍니다.
+
+Q6. RandomForestClassifier와 SVC의 주요 차이점은 무엇인가요?
+
+    성능 비교: 어떤 알고리즘이 더 우수한지는 데이터셋의 특성에 따라 달라집니다.
+
+        RF가 유리한 경우: 대규모 데이터셋, 고차원 데이터(피처 수가 많은 데이터), 
+        복잡한 비선형 관계가 많은 데이터에서 뛰어난 성능을 보입니다. 
+        또한, 별도의 데이터 전처리(스케일링, 정규화) 없이도 좋은 성능을 내는 경향이 있어 사용하기가 편리합니다.
+
+        SVC가 유리한 경우: 데이터의 차원(피처 수)이 샘플 수보다 많거나, 
+        상대적으로 데이터셋의 크기가 작거나 중간 정도일 때 뛰어난 성능을 발휘합니다. 
+        특히, 클래스 간의 경계가 명확한 데이터에서 강력한 '최적의 초평면'을 찾아내기 때문에 높은 정확도를 보입니다.
+
+    평판 비교:
+
+        RF: 현대 머신러닝에서 "일단 시도해 볼 만한" 알고리즘으로 높은 평판을 얻고 있습니다. 
+        특별한 튜닝 없이도 안정적인 성능을 제공하며, 특히 분류와 회귀 문제 모두에서 다용도로 사용됩니다. 
+        앙상블 학습의 대표 주자로서 많은 사람들이 신뢰하는 모델입니다.
+
+        SVC: 예전부터 '고전적인 강자'로 여겨져 왔습니다. 
+        특히 생물정보학(유전자 분류 등)이나 이미지 인식 등 고차원 데이터 분류 문제에서 그 강력함이 입증되었습니다. 
+        하지만, 대규모 데이터셋에서는 훈련 시간이 오래 걸린다는 단점이 있어, 
+        최근에는 연산 효율성이 높은 다른 알고리즘에 밀려나기도 합니다.
+
+    주 용용 분야 비교:
+
+        랜덤 포레스트 (Random Forest)
+            금융: 신용카드 사기 탐지, 주식 시장 동향 예측 등
+            의료: 질병 진단(암 진단 등), 유전체 데이터 분석
+            전자상거래: 상품 추천 시스템, 고객 이탈 예측
+            기타: 대규모 위성 이미지 분석을 통한 토지 이용 분류 등 복잡하고 대규모 데이터가 필요한 분야에 널리 활용됩니다.
+
+        SVC (Support Vector Classifier)
+            생물정보학: 유전체 데이터의 분류 및 패턴 인식
+            자연어 처리: 텍스트 분류, 스팸 메일 필터링
+            컴퓨터 비전: 얼굴 인식, 이미지 분류
+            기타: 손글씨 인식, 신호 처리 등 클래스 간의 경계가 명확한 고차원 데이터를 다루는 데 특히 유용합니다.
+
+    결론:
+
+        RF: 
+            대규모 데이터를 다루거나, 
+            빠른 프로토타이핑이 필요할 때, 
+            그리고 모델의 해석 가능성을 일부 고려해야 할 때 좋은 선택입니다.
+
+        SVC:
+            데이터셋의 크기가 작거나 중간 정도이고, 
+            고차원 데이터를 다룰 때, 
+            그리고 명확한 결정 경계를 찾는 것이 중요할 때 매우 강력한 성능을 보여줍니다.
+
+"""
