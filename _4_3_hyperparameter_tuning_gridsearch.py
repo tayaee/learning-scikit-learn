@@ -186,4 +186,36 @@ Q4. GridSearchCV의 best_score_와 final_accuracy는 어떤 차이가 있나요?
     best_score_는 높지만 final_accuracy가 상대적으로 낮다면, 
     모델이 학습 데이터에 과적합되었을 가능성이 높습니다. 
     final_accuracy는 모델의 진정한 일반화 성능을 보여주는 지표입니다.
+
+Q5. GridSearchCV에서 CV는 무엇의 약자이며, 어떤 역할을 하나요?
+
+    CV는 **Cross-Validation (교차 검증)**의 약자입니다.
+
+    GridSearchCV는 각 하이퍼파라미터 조합의 성능을 평가할 때, 데이터를 단 한 번만 나누어 평가하는 것이 아니라 교차 검증을 사용합니다.
+    예를 들어 `cv=5`로 설정하면, 학습 데이터를 5개의 폴드(fold)로 나눈 뒤, 
+    하나의 하이퍼파라미터 조합에 대해 총 5번의 학습과 평가를 반복합니다. 
+    그리고 이 5개의 평가 점수의 평균을 해당 조합의 최종 성능 점수로 사용합니다.
+
+    이러한 방식은 데이터 분할에 따른 우연성을 줄여주고, 
+    모델의 일반화 성능을 더 안정적이고 신뢰성 있게 평가할 수 있도록 도와줍니다.
+    따라서 CV는 하이퍼파라미터 튜닝 과정에서 매우 중요한 역할을 합니다.
+
+Q6. 특정 모델에서 튜닝할 수 있는 모든 하이퍼파라미터 목록을 어떻게 확인할 수 있나요?
+
+    scikit-learn의 모든 추정기(estimator)는 `get_params()` 메서드를 가지고 있습니다. 
+    이 메서드를 호출하면 해당 모델에서 설정하고 튜닝할 수 있는 모든 하이퍼파라미터의 목록과 현재 값을 딕셔너리 형태로 얻을 수 있습니다.
+
+    예시 코드:
+    ```python
+    from sklearn.svm import SVC
+
+    svc = SVC()
+    print(svc.get_params())
+    ```
+
+    출력 결과:
+    ```
+    {'C': 1.0, 'break_ties': False, 'cache_size': 200, 'class_weight': None, 'coef0': 0.0, 'decision_function_shape': 'ovr', 'degree': 3, 'gamma': 'scale', 'kernel': 'rbf', 'max_iter': -1, 'probability': False, 'random_state': None, 'shrinking': True, 'tol': 0.001, 'verbose': False}
+    ```
+    이 목록을 참고하여 `param_grid`나 `param_distributions`를 구성하면 됩니다.    
 """
