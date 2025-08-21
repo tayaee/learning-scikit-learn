@@ -1,4 +1,4 @@
-### scikit-learn 학습 목차
+### scikit-learn API 사용법 학습 목차
 
 #### **Part 1: Scikit-learn 기본 개념 및 API**
 * `_1_1_preprocess_standardscaler.py`: 데이터 스케일링 `StandardScaler`
