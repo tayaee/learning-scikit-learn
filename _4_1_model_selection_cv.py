@@ -229,4 +229,24 @@ Q6. cross_val_score의 결과로부터 평균점수와 표준편차를 이용하
     성능구간은 0.867 ± 0.054
 
     즉 이 모델의 정확도가 [0.813, 0.921] 사이에 있을 확률은 95%입니다 라고 말할 수 있다.    
+
+Q7. cross_val_score의 첫 번째 인자(estimator)로는 어떤 종류의 객체를 전달할 수 있나요?
+
+    첫 번째 인자로는 **scikit-learn의 추정기(Estimator) 인터페이스를 따르는 모든 객체**를 전달할 수 있습니다. 
+    추정기는 데이터로부터 학습하는 모든 객체를 의미하며, 
+    `sklearn.base.BaseEstimator`를 상속하고 `fit` 메서드를 가집니다.
+
+    주요 예시는 다음과 같습니다.
+    1.  **개별 모델**: 
+        `LogisticRegression`, `SVC`, `RandomForestClassifier` 등 개별 분류/회귀 모델.
+    2.  **파이프라인(Pipeline)**: 
+        `Pipeline` 객체는 전처리 단계와 모델을 하나로 묶은 단일 추정기로 취급되므로 전달 가능합니다. 
+        이는 데이터 누수 없이 교차 검증을 수행하는 가장 좋은 방법입니다.
+    3.  **하이퍼파라미터 튜닝 객체**: 
+        `GridSearchCV`, `RandomizedSearchCV` 객체도 학습이 완료되면 
+        최적의 모델을 내장한 단일 추정기로 동작합니다.
+
+    결론적으로, `fit` 메서드를 가지고 scikit-learn의 일관된 API를 따르는 객체라면 
+    대부분 `cross_val_score`와 함께 사용할 수 있습니다.
+    
 """
