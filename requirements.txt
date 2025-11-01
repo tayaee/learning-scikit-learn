@@ -5,7 +5,13 @@ seaborn
 
 # ml
 scikit-learn
+imbalanced-learn
+rrcf
 
 # dl
 tensorflow
 torch
+keras
+
+# dl, gluon and mxnet
+# mxnet==1.9.1
